@@ -43,9 +43,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'users',
-    # "whitenoise.runserver_nostatic",
     "corsheaders",
-    "Property",
+    'shuttle',
 
     
 
@@ -92,24 +91,19 @@ WSGI_APPLICATION = 'sha2a.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
+
+
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
-
-
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.postgresql_psycopg2",
-#         "NAME": "sha2a",
-#         "USER": "postgres",
-#         "PASSWORD": "root",
-#         "HOST": "localhost",
-#         "PORT": 5432,
-#     }
-# }
+     "default": {
+         "ENGINE": "django.db.backends.postgresql_psycopg2",
+         "NAME": "Kiro",
+         "USER": "postgres",
+         "PASSWORD": "root",
+         "HOST": "localhost",
+         "PORT": 5432,
+     }
+ }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
@@ -207,11 +201,7 @@ import dj_database_url
 prod_db  =  dj_database_url.config(conn_max_age=500)
 DATABASES['default'].update(prod_db)
 
-EMAIL_USE_TLS = True
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_HOST_USER = 'slowmoe329@gmail.com'
-EMAIL_HOST_PASSWORD = "fxojzpkqltgisbed"
+
 
 
 CASHES = {
@@ -223,6 +213,3 @@ CASHES = {
         }
     }
 }
-
-USER_ONLINE_TIMEOUT = 300
-USER_LASTSEEN_TIMEOUT = 60 * 60 * 24 * 7

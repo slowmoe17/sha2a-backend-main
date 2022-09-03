@@ -1,55 +1,64 @@
-from django.contrib.auth.models import AbstractUser
 from django.db import models
-from django.utils.translation import gettext as _
-from django.conf import settings
-import datetime
-from django.core.cache import cache
-
-
+from django.contrib.auth.models import AbstractUser
 from .managers import CustomUserManager
+
+
 class CustomUser(AbstractUser):
-    email = models.EmailField(_('email address'), unique=True)
+
+    type = (
+        ('driver', 'Driver'),
+        ('hotel', 'Hotel'),
+        ('customer', 'Customer'),
+    )
+ 
+    email = models.EmailField(unique=True)
     phone = models.CharField(max_length=14)
-    username = models.CharField(max_length=255, blank=True, null=True)
+    username = models.CharField(max_length=255, unique=True)
+    hotel_name = models.CharField(max_length=255,blank=True, null=True)
+    user_type = models.CharField(max_length=255, choices=type, default='customer')
 
 
-    is_verified = models.BooleanField(default=False)
-    otp = models.CharField(max_length=200 , null=True, blank=True)
 
+    USERNAME_FIELD = 'username'
+    REQUIRED_FIELDS = ['email', 'phone']
 
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ('phone', )
 
     objects = CustomUserManager()
 
+    def DriverFilter(self):
+        if self.user_type == 'driver':
+            hotel_name = "Null"
+        return self.objects.filter(user_type='driver')
+
+        
+
+
+
+
+
     def __str__(self):
-        return self.email
+        return self.username
 
 
-class ProfileImg(models.Model):
-    user = models.OneToOneField('users.Profile', on_delete=models.CASCADE)
-    img = models.ImageField(upload_to='profile_img', blank=True)
+class Driver(models.Model):
+    full_name = models.CharField(max_length=255)
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+
     def __str__(self):
-        return self.img.url
+        return self.full_name
+
+
+
+class Hotel(models.Model):
+    hotel_name = models.CharField(max_length=255)
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+
+    
 
 
 
 
-class Profile(models.Model):
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE , blank=True, null=True)
-    type = (
-
-        ("seeking", "seeking"),
-
-        ("offering", "offering"),
-
-    )
-    country = models.CharField(max_length=100 , blank=True, null=True)
-    city = models.CharField(max_length=100 , blank=True, null=True)
-    profile_photo = models.ForeignKey(ProfileImg, on_delete=models.CASCADE, blank=True, null=True)
-    profile_type = models.CharField(max_length=10, choices=type ,blank=True, null=True)
 
 
 
 
-  
